@@ -16,20 +16,20 @@ function Login() {
       <div className="login-form-container flex-col">
         <form className="login-form flex-col">
           <h1 className='auth-type-title'>Login</h1>
-          <div className="form-group flex-col">
-            <label className='form-group-label' htmlFor="identifier">Username or Email</label>
-            <div className="input-block">
-              <i className="fa-solid fa-id-badge fa-lg"></i>
-              <input className='form-group-input' type="text" name="identifier" id="identifier" value={loginCredentials.identifier} onChange={e => setLoginCredentials({...loginCredentials, identifier: e.target.value})} />
-            </div>
-          </div>
-
-          <div className="form-group flex-col">  
-            <label className='form-group-label' htmlFor="password">Password</label>
-            <div className="input-block">
-              <i className="fa-solid fa-user-lock"></i>
-              <input className='form-group-input' type={isPassVisible?'text':'password'} name="password" id="password" value={loginCredentials.password} onChange={e => setLoginCredentials({...loginCredentials, password: e.target.value})} />
-              {loginCredentials.password !== '' && <i className={`fa-regular pass-reveal-icon fa-eye${isPassVisible?'':'-slash'}`} onClick={() => {setIsPassVisible(!isPassVisible)}} />}
+          <div className="auth-form-group flex-col">
+            <h3 className='auth-form-group-title' >Credentials</h3>
+            <div className='auth-form-group-content flex-col'>
+              <label className='auth-form-group-label' htmlFor="email">Email</label>
+              <div className="auth-input-block">
+                <i className="fa-solid fa-id-badge fa-lg"></i>
+                <input className='auth-form-group-input' required type="text" placeholder='email...' name="email" id="email" value={loginCredentials.email} onChange={e => setLoginCredentials({...loginCredentials, email: e.target.value})} />
+              </div>
+              <label className='auth-form-group-label' htmlFor="password">Password</label>
+              <div className="auth-input-block">
+                <i className="fa-solid fa-user-lock"></i>
+                <input className='auth-form-group-input' required type={isPassVisible?'text':'password'} placeholder='password...' name="password" id="password" value={loginCredentials.password} onChange={e => setLoginCredentials({...loginCredentials, password: e.target.value})} />
+                {loginCredentials.password !== '' && <i className={`fa-regular pass-reveal-icon fa-eye${isPassVisible?'':'-slash'}`} onClick={() => {setIsPassVisible(!isPassVisible)}} />}
+              </div>
             </div>
           </div>
 
@@ -40,6 +40,9 @@ function Login() {
           <Link to='/auth/signup' className="auth-user-redirect">
             Don't have an account? Sign up
           </Link>
+          {/* <Link to='/auth/forgotpassword' className="auth-user-redirect">
+            Forgot Password?
+          </Link> */}
         </form>
       </div>
     </>

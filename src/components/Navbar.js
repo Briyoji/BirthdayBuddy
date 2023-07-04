@@ -33,16 +33,45 @@ function Navbar() {
   return (
     <>
       <nav className="navbar">
-        <Link id="logo" to="/" className={`logo slide-${isVisible ?'out':'in'}`}>Birthday<span>Buddy</span></Link>
-          <ul className="nav-links">
-            <li><Link className='nav-link' to="/auth"><i className="fa-solid fa-user"></i></Link></li>
-            <li><NavLink className='nav-link' to="/">Home</NavLink></li>
-            <li><NavLink className='nav-link' to="/about">About</NavLink></li>
-          </ul>
-        <i className={`fa-solid fa-${isNavbarOpen?'close':'bars'} menu-open-cta`} onClick={toggleNavMenu} />
+        <Link
+          id="logo"
+          to="/"
+          className={`logo slide-${isVisible ? "out" : "in"}`}
+        >
+          Birthday<span>Buddy</span>
+        </Link>
+        <ul className="nav-links">
+          <li>
+            <Link className="nav-link" to="/auth">
+              <i className="fa-solid fa-user"></i>
+            </Link>
+          </li>
+          <li>
+            <NavLink className="nav-link" to="/">
+              Home
+            </NavLink>
+          </li>
+          <li>
+            <NavLink className="nav-link" to="/about">
+              About
+            </NavLink>
+          </li>
+        </ul>
+        <i
+          tabIndex="0"
+          className={`fa-solid fa-${
+            isNavbarOpen ? "close" : "bars"
+          } menu-open-cta`}
+          onClick={toggleNavMenu}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              toggleNavMenu();
+            }
+          }}
+        />
       </nav>
-    </> 
-  )
+    </>
+  );
 }
 
 export default Navbar

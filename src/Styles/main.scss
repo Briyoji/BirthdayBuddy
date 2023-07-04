@@ -30,6 +30,22 @@ ul {
   padding: 0;
 }
 
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear {
+  display: none;
+}
+
+input[type="date"]::before { 
+  content: 'dd-mm-yyyy';
+  width: 100%;
+}
+
+/* hide our custom/fake placeholder text when in focus to show the default
+ * 'mm/dd/yyyy' value and when valid to show the users' date of birth value.
+ */
+input[type="date"]:focus::before,
+input[type="date"]:valid::before { display: none }
+
 body {
   // border-bottom: 0.5rem ;
   min-height: 100%;
@@ -110,7 +126,6 @@ nav.navbar {
 
 .auth-container {
   width: 100%;
-  // background-color: #404040;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -141,22 +156,36 @@ nav.navbar {
     color: #5c5b5b;
     text-decoration: underline;
     text-underline-offset: 0.25rem;
+    margin-bottom: 0.5rem;
   }
 
-  .login-form-container {
-    padding: 55% 0;
+  .auth-form-group {
+    padding: 1rem 1rem 0.5rem 1rem;
+    background-color: #e7e4e4;
+    border-radius: 1rem;
+    margin: 1rem 0;
+    width: 80%;
+    align-self: center;
+    justify-self: center;
 
-    .form-group {
-      padding: 1rem 1rem 0.5rem 1rem;
-      background-color: #e7e4e4;
-      border-radius: 1rem;
-      margin: 1rem 0;
-      width: 80%;
-      align-self: center;
-      justify-self: center;
+    .auth-form-group-title {
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      line-height: 120%;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+      // align-self: flex-start;
+    }
 
-      .form-group-label {
-        // color: #000;
+    .auth-form-group-content {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+
+      .auth-form-group-label {
         font-size: 1rem;
         font-weight: 600;
         line-height: 120%;
@@ -164,7 +193,7 @@ nav.navbar {
         align-self: flex-start;
       }
 
-      .input-block {
+      .auth-input-block {
         width: 100%;
         display: flex;
         align-items: center;
@@ -182,30 +211,191 @@ nav.navbar {
         }
       }
 
-      input[type="password"]::-ms-reveal,
-      input[type="password"]::-ms-clear {
-        display: none;
+      .auth-profile-type-input {
+        display: flex;
+        justify-content: flex-start;
+        margin-top: 0.75rem;
+
+        .auth-form-group-label {
+          align-self: center;
+          margin-right: 1rem;
+        }
+
+        .tgl {
+          display: none;
+
+          // add default box-sizing for this scope
+          &,
+          &:after,
+          &:before,
+          & *,
+          & *:after,
+          & *:before,
+          & + .tgl-btn {
+            box-sizing: border-box;
+            &::selection {
+              background: none;
+            }
+          }
+
+          + .tgl-btn {
+            outline: 0;
+            display: block;
+            width: 5em;
+            height: 1.6rem;
+            position: relative;
+            cursor: pointer;
+            user-select: none;
+
+            &:after,
+            &:before {
+              position: relative;
+              display: block;
+              content: "";
+              width: 50%;
+              height: 100%;
+            }
+
+            &:after {
+              left: 0;
+            }
+
+            &:before {
+              display: none;
+            }
+          }
+
+          &:checked + .tgl-btn:after {
+            left: 50%;
+          }
+        }
+
+        .tgl-flip {
+
+          + .tgl-btn {
+            transition: all 0.2s ease;
+            font-family: sans-serif;
+            perspective: 100px;
+            &:after,
+            &:before {
+              display: inline-flex;
+              transition: all 0.4s ease;
+              width: 100%;
+              align-items: center;
+              justify-content: center;
+
+              position: absolute;
+              font-weight: bold;
+              color: #fff;
+              position: absolute;
+              top: 0;
+              left: 0;
+              backface-visibility: hidden;
+              border-radius: 5rem;
+            }
+
+            &.bg-1:after {
+              background: #7FC6A6;
+            }
+            &.bg-1:before {
+              background: #7FC6A6;
+            }
+
+            &.bg-2:after {
+              background: #fe3d3d;
+            }
+            &.bg-2:before {
+              background: #fe3d3d;
+            }
+
+            &:after {
+              content: attr(data-tg);
+              transform: rotateY(-180deg);
+              font-size: 1rem;
+            }
+
+            &:before {
+              font-size: 1rem;
+              content: attr(data-tg);
+            }
+
+            &:active:before {
+              transform: rotateY(-20deg);
+            }
+
+            &:focus {
+              border-radius: 5rem;
+              box-shadow: 0.1rem 0.1rem 0.1rem 0.1rem #75757580;
+            }
+          }
+
+          &:checked + .tgl-btn {
+            &:before {
+              transform: rotateY(180deg);
+            }
+
+            &:after {
+              transform: rotateY(0);
+              left: 0;
+              // background: #7FC6A6;
+            }
+
+            &:active:after {
+              transform: rotateY(20deg);
+            }
+          }
+        }
       }
 
-      .form-group-input {
+      .auth-form-group-input {
         width: 100%;
-        // padding: 0.5rem 0.5rem;
-        // border-radius: 0.5rem;
         border: none;
         margin: 0.5rem 1rem;
         background-color: #e7e4e4;
 
         &:focus {
           outline: none;
-          line-height: 0.1rem;
           border-bottom: 2px solid #404040;
         }
       }
+
+      .auth-input-block-secondary {
+        margin: 0 1rem 0.5rem 1rem;
+      }
     }
 
-    
+    .form-group-error {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: #fe3d3d;
+      padding-top: 0.5rem;
 
+      i {
+        font-size: 1rem;
+        width: 2rem;
+      }
 
+      .auth-form-group-error {
+        font-size: 0.75rem;
+        font-weight: 600;
+        line-height: 120%;
+        width: 100%;
+        text-transform: capitalize;
+        text-align: left;
+        margin: 0.5rem 1rem;
+      }
+    }
+  }
+
+  .login-form-container {
+    padding: 55% 0;
+  }
+
+  .signup-form-container {
+    padding: 10% 0;
   }
 }
 
