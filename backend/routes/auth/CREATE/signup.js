@@ -53,6 +53,13 @@ router.post("/", signupValidation, async (req, res) => {
     userData.password = hashedPassword;
     userData.birthdate = new Date(Date.parse(userData.birthdate)).toISOString().split('T')[0];
     
+    // Checking if the user is already logged in
+    let token = await validateAuthToken(req.headers.authorization);
+    if (token.success) {
+      token = await Token.findOne({ id: user._id, tokenString: token.token });
+      if (token) return raiseInvalidLoginError(406, [{msg:"User already logged in!", path:"login"}])
+    }
+
     user = await User.create(userData);
   
     // Generating Response Token

@@ -32,6 +32,7 @@ import { combineReducers } from "redux";
 import utilSlice from "./utilSlice";
 import birthdaySlice from "./birthdaySlice";
 import authSlice from "./authSlice";
+import userSlice from "./userSlice";
 
 const persistConfig = {
   key: "root",
@@ -44,6 +45,7 @@ const reducers = combineReducers({
   utils: utilSlice,
   auth: authSlice,
   birthday: birthdaySlice,
+  user: userSlice,
 });
 
 const persistedReducer = persistReducer(persistConfig, reducers);

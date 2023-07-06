@@ -9,18 +9,18 @@ import { getUserDetails } from '../utility/redux-store/authSlice';
 function Navbar() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  
-  const authData = useSelector(state => state.auth.authData);
+
   const { isNavbarOpen } = useSelector(state => state.utils);
   
   const handleUserLink = () => {
-    dispatch(getUserDetails());
-    if (authData.status && authData.token !== null) {
-      dispatch(toggleNavbar(!isNavbarOpen));
-      navigate("/user/profile");
-    } else {
-      navigate("/auth");
-    }
+    dispatch(getUserDetails()).then((res) => {
+      if (res.payload.status && res.payload.token !== null) {
+        dispatch(toggleNavbar(!isNavbarOpen));
+        navigate("/user/profile");
+      } else {
+        navigate("/auth");
+      }
+    });
   }
 
   return (
@@ -45,7 +45,7 @@ function Navbar() {
             </NavLink>
           </li>
           <li>
-            <NavLink className="nav-link" to="/about">
+            <NavLink className="nav-link" to="/auth">
               About
             </NavLink>
           </li>

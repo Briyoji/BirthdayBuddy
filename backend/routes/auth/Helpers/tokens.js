@@ -55,7 +55,6 @@ async function generateAuthToken(data, expiry = "1h") {
 
 async function validateAuthToken(hashedToken) {
   try {
-    
     authToken = decrypt(hashedToken, process.env.TOKEN_KEY);
 
     let token = jwt.verify(authToken, process.env.JWT_SECRET);

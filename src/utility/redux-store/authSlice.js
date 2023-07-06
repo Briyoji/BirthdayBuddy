@@ -31,7 +31,7 @@ const authSlice = createSlice({
 
     builder.addCase(loginUser.fulfilled, (state, action) => {
       state.authData = {
-        status : true,
+        status : action.payload.authToken?true:false,
         token : action.payload.authToken,
       };
     })
@@ -48,7 +48,8 @@ export const signupUser = createAsyncThunk('auth/signupUser', async (signupData,
   const response = await fetch(`${HOST_URI}/auth/signup`, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'authorization': `${store.getState().auth.authData.token}`
     },
     body: JSON.stringify(signupData)
   })
@@ -85,7 +86,7 @@ export const loginUser = createAsyncThunk('auth/loginUser', async (loginData, st
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Authentication': `${store.getState().auth.authData.token}`
+      'authorization': `${store.getState().auth.authData.token}`
     },
     body: JSON.stringify(loginData)
   })
@@ -114,7 +115,6 @@ export const loginUser = createAsyncThunk('auth/loginUser', async (loginData, st
 })
 
 export const getUserDetails = createAsyncThunk('auth/getUserDetails', async (_, { getState, dispatch }) => {
-  console.log(getState().auth.authData.token)
   const response = await fetch(`${HOST_URI}/auth/fetchUser`, {
     method: 'GET',
     headers: {
@@ -123,9 +123,8 @@ export const getUserDetails = createAsyncThunk('auth/getUserDetails', async (_, 
     }
   })
 
-  if (response.ok) { 
-    const data = await response.json();
-    console.log(data)
+  if (response.ok) {
+    // const data = await response.json();
     return {status: true, token: getState().auth.authData.token};
   } else {
 

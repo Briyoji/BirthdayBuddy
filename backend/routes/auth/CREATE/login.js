@@ -1,13 +1,13 @@
 require("dotenv").config();
 
-const { signupValidation, CheckValidation, loginValidation } = require("../Helpers/validators");
+const { CheckValidation, loginValidation } = require("../Helpers/validators");
 
 const express = require("express");
 const router = express.Router();
 
 const bcrypt = require("bcryptjs");
 
-const { generateAuthToken } = require("../Helpers/tokens");
+const { generateAuthToken, validateAuthToken } = require("../Helpers/tokens");
 
 const User = require("../../../models/User");
 const Token = require("../../../models/Token");
@@ -43,9 +43,12 @@ router.post("/", loginValidation, async (req, res) => {
     if (!passCompare) return raiseInvalidLoginError();
 
     // Checking if the user is already logged in
-    const token = await Token.findOne({ id: user._id });
-    if (token) return raiseInvalidLoginError(406, [{msg:"User already logged in!", path:"login"}])
-    
+    let token = await validateAuthToken(req.headers.authorization);
+    if (token.success) {
+      token = await Token.findOne({ id: user._id, tokenString: token.token });
+      if (token) return raiseInvalidLoginError(406, [{msg:"User already logged in!", path:"login"}])
+    }
+
     // Generating the token
     const data = {
       id: user._id,
@@ -54,7 +57,7 @@ router.post("/", loginValidation, async (req, res) => {
     };
 
     const { authToken } = await generateAuthToken(data);
-    res.json({authToken})
+    res.json({authToken, status: true})
     
   } catch (error) {
     // Catching unwanted errors

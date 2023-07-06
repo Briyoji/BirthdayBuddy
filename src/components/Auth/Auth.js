@@ -8,19 +8,21 @@ import { getUserDetails } from '../../utility/redux-store/authSlice';
 function Auth() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { authData } = useSelector((state) => state.auth);
+  // const { authData } = useSelector((state) => state.auth);
   const { authRoute } = useSelector((state) => state.utils);
 
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
-    dispatch(getUserDetails());
-    if (authData.status && authData.token !== null) {
-      navigate("/");
-    }
-    setTimeout(() => {
-      setIsLoaded(true);
-    }, 1000);
+    dispatch(getUserDetails()).then((res) => {
+      if (res.payload.status && res.payload.token !== null) {
+        navigate("/");
+      }
+      setTimeout(() => {
+        setIsLoaded(true);
+      }, 1000);
+    })
+    
     // eslint-disable-next-line
   }, []);
 

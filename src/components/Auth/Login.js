@@ -38,7 +38,6 @@ function Login() {
     } else {
       dispatch(loginUser(loginCredentials)).then((res) => {
         if (res.payload.authToken !== null && res.payload.status) {
-          console.log("Logged in!");
           navigate("/");
         }
       });
