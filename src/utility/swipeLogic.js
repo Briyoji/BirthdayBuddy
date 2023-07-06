@@ -10,7 +10,7 @@ export default function getSwipeDirection () {
 
   const carousel = document.body;
 
-  console.log(carousel);
+  // console.log(carousel);
 
   carousel.addEventListener('touchstart', function(event) {
     // Store the starting touch position
@@ -34,22 +34,22 @@ export default function getSwipeDirection () {
         // Horizontal swipe (left or right)
         if (deltaX > 0) {
           // Right swipe
-          console.log('Right swipe');
+          // console.log('Right swipe');
           return 'right';
         } else {
           // Left swipe
-          console.log('Left swipe');
+          // console.log('Left swipe');
           return 'left';
         }
       } else {
         // Vertical swipe (up or down)
         if (deltaY > 0) {
           // Down swipe
-          console.log('Down swipe');
+          // console.log('Down swipe');
           return 'down';
         } else {
           // Up swipe
-          console.log('Up swipe');
+          // console.log('Up swipe');
           return 'up';
         }
       }

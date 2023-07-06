@@ -20,7 +20,7 @@ router.get("/", verifyUser, async (req, res) => {
     return res.send(birthdays);
   
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     return res.status(500).send("Something went wrong!");  
   }
 })

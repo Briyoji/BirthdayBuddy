@@ -137,12 +137,6 @@ nav.navbar .menu-open-cta {
   text-align: center;
   border-radius: 0.75em;
 }
-.auth-container .auth-user-redirect {
-  color: #5c5b5b;
-  text-decoration: underline;
-  text-underline-offset: 0.25rem;
-  margin-bottom: 0.5rem;
-}
 .auth-container .auth-form-group {
   padding: 1rem 1rem 0.5rem 1rem;
   background-color: #e7e4e4;
@@ -334,7 +328,13 @@ nav.navbar .menu-open-cta {
   padding: 55% 0;
 }
 .auth-container .signup-form-container {
-  padding: 10% 0;
+  padding: 5% 0;
+}
+.auth-container .auth-user-redirect {
+  color: #5c5b5b;
+  text-decoration: underline;
+  text-underline-offset: 0.25rem;
+  margin-bottom: 0.5rem;
 }
 
 section.hero-section {

@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+// eslint-disable-next-line
 const HOST_URI = process.env.APP_HOST_URI;
 
 const initialState = {

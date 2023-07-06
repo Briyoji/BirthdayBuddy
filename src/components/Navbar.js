@@ -1,50 +1,43 @@
-import React, {useState} from 'react'
+// import React, {useState} from 'react'
+import React from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 
-import { Link, NavLink } from 'react-router-dom'
-import { setUtil } from '../utility/redux-store/utilSlice';
+import { Link, NavLink, useNavigate } from 'react-router-dom'
+import { toggleNavbar } from '../utility/redux-store/utilSlice';
+import { getUserDetails } from '../utility/redux-store/authSlice';
 
 function Navbar() {
   const dispatch = useDispatch();
-
+  const navigate = useNavigate();
+  
+  const authData = useSelector(state => state.auth.authData);
   const { isNavbarOpen } = useSelector(state => state.utils);
   
-  const [isVisible, setIsVisible] = useState(false);
-  
-  const toggleNavMenu = (data, count = 0) => {
-    setIsVisible(!isVisible);
-
-    if (!isNavbarOpen && count === 0) {
-      document.querySelector(".logo").style.display = "none";
-      document.querySelector(".nav-links").style.display = "flex";
-
-      setTimeout(() => {
-        toggleNavMenu(data, count + 1);
-      }, 7000);
-      dispatch(setUtil({"isNavbarOpen": true}))
+  const handleUserLink = () => {
+    dispatch(getUserDetails());
+    if (authData.status && authData.token !== null) {
+      dispatch(toggleNavbar(!isNavbarOpen));
+      navigate("/user/profile");
     } else {
-      document.querySelector(".logo").style.display = "flex";
-      document.querySelector(".nav-links").style.display = "none";
-      dispatch(setUtil({"isNavbarOpen": false}))
+      navigate("/auth");
     }
-    
   }
-  
+
   return (
     <>
       <nav className="navbar">
         <Link
           id="logo"
           to="/"
-          className={`logo slide-${isVisible ? "out" : "in"}`}
+          className={`logo slide-${isNavbarOpen ? "out" : "in"}`}
         >
           Birthday<span>Buddy</span>
         </Link>
         <ul className="nav-links">
           <li>
-            <Link className="nav-link" to="/auth">
+            <div className="nav-link" onClick={handleUserLink}>
               <i className="fa-solid fa-user"></i>
-            </Link>
+            </div>
           </li>
           <li>
             <NavLink className="nav-link" to="/">
@@ -62,10 +55,10 @@ function Navbar() {
           className={`fa-solid fa-${
             isNavbarOpen ? "close" : "bars"
           } menu-open-cta`}
-          onClick={toggleNavMenu}
+          onClick={() => dispatch(toggleNavbar(!isNavbarOpen))}
           onKeyDown={(e) => {
             if (e.key === "Enter" || e.key === " ") {
-              toggleNavMenu();
+              dispatch(toggleNavbar(!isNavbarOpen));
             }
           }}
         />

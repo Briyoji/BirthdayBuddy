@@ -73,7 +73,7 @@ router.put("/:id", createBirthdayValidation, verifyUser, async (req, res) => {
     return res.status(200).send("Birthday updated successfully!");
   
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     return res.status(500).send("Something went wrong!");  
   }
 })

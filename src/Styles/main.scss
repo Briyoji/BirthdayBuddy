@@ -151,13 +151,7 @@ nav.navbar {
     text-align: center;
     border-radius: 0.75em;
   }
-
-  .auth-user-redirect {
-    color: #5c5b5b;
-    text-decoration: underline;
-    text-underline-offset: 0.25rem;
-    margin-bottom: 0.5rem;
-  }
+ 
 
   .auth-form-group {
     padding: 1rem 1rem 0.5rem 1rem;
@@ -395,7 +389,14 @@ nav.navbar {
   }
 
   .signup-form-container {
-    padding: 10% 0;
+    padding: 5% 0;
+  }
+
+  .auth-user-redirect {
+    color: #5c5b5b;
+    text-decoration: underline;
+    text-underline-offset: 0.25rem;
+    margin-bottom: 0.5rem;
   }
 }
 

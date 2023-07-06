@@ -1,7 +1,7 @@
 require("dotenv").config();
 
-const { body, validationResult } = require("express-validator");
-const { isEmail, isLength } = require("validator");
+const { check, body, validationResult } = require("express-validator");
+const { isEmail, isLength, isEmpty } = require("validator");
 
 const CheckValidation = (req, res) => {
   const errors = validationResult(req);
@@ -21,11 +21,11 @@ const loginValidation = [
         req.identifierType = 'username';
         return true;
       } else {
-        throw new Error('Username should be between 3-15 Characters');
+        throw new Error('Invalid Login Details!');
       }
     }
   }),
-  body("password", "Password should be of atleast 6 Characters")
+  body("password", "Invalid Login Details!")
     .exists()
     .isLength({ min: 6 }),
 ];

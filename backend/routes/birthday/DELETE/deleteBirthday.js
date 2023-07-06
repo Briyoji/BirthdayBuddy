@@ -13,7 +13,7 @@ router.delete('/:id', verifyUser, async (req, res) => {
     const birthday = await Birthday.findById(req.params.id);
     if (!birthday) return res.status(404).send("Birthday not found!");
 
-    console.log(birthday.createdBy.toString(), req.data.id);
+    // console.log(birthday.createdBy.toString(), req.data.id);
 
     if (birthday.createdBy.toString() !== req.data.id) return res.status(401).send("Unauthorized");
 
@@ -21,7 +21,7 @@ router.delete('/:id', verifyUser, async (req, res) => {
 
     res.status(200).send("Birthday deleted successfully!");
   } catch (err) {
-    console.log(err);
+    // console.log(err);
     res.status(500).send("Internal Server Error");
   }
 })

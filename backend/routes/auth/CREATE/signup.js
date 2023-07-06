@@ -15,8 +15,21 @@ router.post("/", signupValidation, async (req, res) => {
   try {
     if (CheckValidation(req, res)) return null;
 
-    const raiseInvalidSignupError = (code = 400, message = "invalid Signup Details!") => {
-      return res.status(code).json({ error: message });
+    const raiseInvalidSignupError = (
+      code = 400,
+      errs = [{ msg: "invalid Signup Details!", path: "email" }]
+    ) => {
+      const data = [];
+      errs.map((err) => {
+        data.push({
+          msg: err.msg,
+          type: "invalidSignup",
+          path: err.path,
+          location: "auth/signup",
+        });
+      });
+
+      return res.status(code).json({errors:data});
     };
 
     req.body.email = req.body.email.toLowerCase().trim();
@@ -26,11 +39,11 @@ router.post("/", signupValidation, async (req, res) => {
     // Checking if the user exists
     let user = await User.findOne({$or: [{email: req.body.email}, {username: req.body.username}]});
     if (user) {
-      if (user.email === req.body.email && user.username === req.body.username) return raiseInvalidSignupError(409, "User already exists!");
-      if (user.email === req.body.email) return raiseInvalidSignupError(409, "Email already exists!");
-      if (user.username === req.body.username) return raiseInvalidSignupError(409, "Username already exists!");
+      if (user.email === req.body.email && user.username === req.body.username) return raiseInvalidSignupError(409, [{msg:"Username already exists!", path:"username"},{msg:"Email already exists!", path:"email"}]);
+      if (user.email === req.body.email) return raiseInvalidSignupError(409, [{msg:"Email already exists!", path:"email"}]);
+      if (user.username === req.body.username) return raiseInvalidSignupError(409, [{msg:"Username already exists!", path:"username"}]);
     }
-  
+
     // Hashing the password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(req.body.password + process.env.PEPPER, salt);

@@ -1,31 +1,69 @@
-import React, { useState } from 'react'
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { signupUser, setError } from '../../utility/redux-store/authSlice';
+import { setUtil } from '../../utility/redux-store/utilSlice';
 
 function SignUp() {
 
+  // helpers init
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  // getting states
+  const { errCredentials, errPersonalData } = useSelector(state => state.auth);
   const [isPassVisible, setIsPassVisible] = useState(false);
-  const [confirmPassword, setConfirmPassword] = useState('')
-  
+  const [confirmPassword, setConfirmPassword] = useState('');
+
+  // initializing page
+  useEffect(() => {
+    dispatch(setError({"errCredentials": '‎'}))
+    dispatch(setError({"errPersonalData": '‎'}))
+  }, [dispatch])
+
   const initialState = {
     name:"",
     username:"",
     email:"",
     password:"",
     birthdate:"",
-    public:true
+    public: false
   }
 
   const [signupData, setSignupData] = useState(initialState);
-  console.log(signupData);
 
   const dataSet = [
-    { content: "username", type: "text" },
-    { content: "name", type: "text" },
-    { content: "birthdate", type: "date" },
+    { content: "username", type: "text", icon: "id-badge" },
+    { content: "name", type: "text", icon: "id-card" },
+    { content: "birthdate", type: "date", icon: "cake-candles" },
   ];
 
-  const handleSignup = (e) => {
-    console.log("signupData", signupData);
+  const handleSignup = (data) => {
+
+    dispatch(setError({"errPersonalData": '‎'}))
+    dispatch(setError({"errCredentials": '‎'}))
+
+    const allValuesNotEmpty = Object.values(data).every(value => value !== '');
+    const passwordsMatch = data.password === confirmPassword && data.password !== '';
+
+    if (!allValuesNotEmpty) {
+      dispatch(setError({"errPersonalData": "Please fill all required field!"}))
+      dispatch(setError({"errCredentials": "Please fill all required field!"}))
+      
+      return;
+    } else if (!passwordsMatch) {
+      dispatch(setError({"errCredentials": "Passwords do not match!"}))
+      return;
+    }
+
+    if (allValuesNotEmpty && passwordsMatch) {
+      dispatch(signupUser(signupData)).then((res) => {
+        if (res.payload.authToken !== null && res.payload.status) {
+          console.log("Logged in!");
+          navigate("/");
+        }
+      })
+    }
   }
 
   return (
@@ -45,7 +83,7 @@ function SignUp() {
                     {data.content}
                   </label>
                   <div className="auth-input-block">
-                    <i className="fa-solid fa-id-badge fa-lg"></i>
+                    <i className={`fa-solid fa-${data.icon} fa-lg`}></i>
                     <input
                       className="auth-form-group-input"
                       required
@@ -87,7 +125,6 @@ function SignUp() {
                   data-tg={signupData.public ? "public" : "private"}
                   htmlFor="public"
                   onKeyDown={(e) => {
-                    console.log(e.key);
                     if (e.key === "Enter" || e.key === " ") {
                       setSignupData({
                         ...signupData,
@@ -99,11 +136,11 @@ function SignUp() {
               </div>
             </div>
             <div className="form-group-error">
+              {errPersonalData !== "‎" && (
                 <i className="fa-solid fa-triangle-exclamation"></i>
-                <h3 className="auth-form-group-error">
-                  Personal Detail Error!
-                </h3>
-              </div>
+              )}
+              <h3 className="auth-form-group-error">{errPersonalData}</h3>
+            </div>
           </div>
           <div className="auth-form-group flex-col">
             <h3 className="auth-form-group-title">Credentials</h3>
@@ -112,11 +149,11 @@ function SignUp() {
                 Email
               </label>
               <div className="auth-input-block">
-                <i className="fa-solid fa-id-badge fa-lg"></i>
+                <i className="fa-solid fa-at"></i>
                 <input
                   className="auth-form-group-input"
                   required
-                  type="text"
+                  type="email"
                   placeholder="email"
                   name="email"
                   id="email"
@@ -164,7 +201,16 @@ function SignUp() {
                   name="confirm password"
                   id="confirm password"
                   value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  onChange={(e) => {
+                    setConfirmPassword(e.target.value);
+                    if (e.target.value !== signupData.password) {
+                      dispatch(
+                        setError({ errCredentials: "Passwords do not match!" })
+                      );
+                    } else {
+                      dispatch(setError({ errCredentials: "‎" }));
+                    }
+                  }}
                 />
                 {signupData.password !== "" && (
                   <i
@@ -178,19 +224,32 @@ function SignUp() {
                 )}
               </div>
             </div>
-              <div className="form-group-error">
+            <div className="form-group-error">
+              {errCredentials !== "‎" && (
                 <i className="fa-solid fa-triangle-exclamation"></i>
-                <h3 className="auth-form-group-error">
-                  Passwords Do Not Match!
-                </h3>
-              </div>
+              )}
+              <h3 className="auth-form-group-error">{errCredentials}</h3>
+            </div>
           </div>
 
-          <h4 className="auth-form-submit-btn" onClick={() => {handleSignup(signupData)}}>signup</h4>
+          <h4
+            className="auth-form-submit-btn"
+            tabIndex="0"
+            onClick={() => {
+              handleSignup(signupData);
+            }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                handleSignup(signupData);
+              }
+            }}
+          >
+            signup
+          </h4>
 
-          <Link to="/auth/login" className="auth-user-redirect">
-            Already a user? Login
-          </Link>
+          <span className="auth-user-redirect" onClick={() => {dispatch(setUtil({'authRoute' : 'login'}))}}>
+            Already a User? Login
+          </span>
         </form>
       </div>
     </>

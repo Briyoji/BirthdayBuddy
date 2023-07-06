@@ -1,25 +1,46 @@
-import React from 'react'
-import Login from './Login';
-import SignUp from './SignUp';
-import { Routes, Route } from 'react-router-dom';
-import Profile from './Profile';
-
+import React, { useEffect, useState } from "react";
+import Login from "./Login";
+import SignUp from "./SignUp";
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { getUserDetails } from '../../utility/redux-store/authSlice';
 
 function Auth() {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { authData } = useSelector((state) => state.auth);
+  const { authRoute } = useSelector((state) => state.utils);
+
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+    dispatch(getUserDetails());
+    if (authData.status && authData.token !== null) {
+      navigate("/");
+    }
+    setTimeout(() => {
+      setIsLoaded(true);
+    }, 1000);
+    // eslint-disable-next-line
+  }, []);
+
   return (
     <>
       <div className="auth-container">
-        
-        <Routes>
-          <Route path='/' element={<Login />} />
-          <Route path='/login' element={<Login />} />
-          <Route path='/signup' element={<SignUp />} />
-          <Route path='/profile' element={<Profile />} />
-        </Routes>
-
+        {isLoaded ? (
+          authRoute === "login" ? (
+            <Login />
+          ) : authRoute === "signup" ? (
+            <SignUp />
+          ) : (
+            navigate("/404")
+          )
+        ) : (
+          <h1>Loading</h1>
+        )}
       </div>
     </>
-  )
+  );
 }
 
-export default Auth
+export default Auth;

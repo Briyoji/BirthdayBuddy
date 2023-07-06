@@ -1,7 +1,9 @@
 import React, { useEffect } from "react";
 import { generateCalendar } from "../../utility/CalendarUtility";
 
+// eslint-disable-next-line
 import { useDispatch, useSelector } from 'react-redux';
+// eslint-disable-next-line
 import { getBirthdays } from "../../utility/redux-store/birthdaySlice";
 
 function CalendarMonth(props) {
@@ -73,7 +75,7 @@ function CalendarMonth(props) {
         // dayElement.style.backgroundColor = "red";
         // dayElement.style.color = "white";
       
-        console.log(birthdays[monthNumber][day].length)
+        // console.log(birthdays[monthNumber][day].length)
 
         const styles = {
           backgroundColor: birthdayColors[birthdays[monthNumber][day].length],

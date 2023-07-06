@@ -16,8 +16,21 @@ router.post("/", loginValidation, async (req, res) => {
   try {
     if (CheckValidation(req, res)) return null;
 
-    const raiseInvalidLoginError = (code = 400, message = "invalid Login Details!") => {
-      return res.status(code).json({ error: message });
+    const raiseInvalidLoginError = (
+      code = 400,
+      errs = [{ msg: "invalid Login Details!", path: "identifier" }]
+    ) => {
+      const data = [];
+      errs.map((err) => {
+        data.push({
+          msg: err.msg,
+          type: "invalidLogin",
+          path: err.path,
+          location: "auth/login",
+        });
+      });
+
+      return res.status(code).json({errors:data});
     };
   
     const identifier = req.body.identifier.toLowerCase().trim();
@@ -31,7 +44,7 @@ router.post("/", loginValidation, async (req, res) => {
 
     // Checking if the user is already logged in
     const token = await Token.findOne({ id: user._id });
-    if (token) return raiseInvalidLoginError(406, "User already logged in!")
+    if (token) return raiseInvalidLoginError(406, [{msg:"User already logged in!", path:"login"}])
     
     // Generating the token
     const data = {
